@@ -1,0 +1,270 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block styles %}
+<style>
+    .back
+    {
+        background-repeat: repeat-y;
+        background-position: center;
+        top: 10%;
+        background-size: cover;
+    }
+    /*fixes issues with backrground image proportions*/
+    main
+    {
+         margin: 0%;
+    }
+</style>
+{% endblock %}
+{% block main %}
+<br>
+<br>
+    <h2>{{ title }}</h2><hr>
+
+    {% for section in chapter %}
+        <div id="{{ loop.index }}">
+
+            <div class="text">
+                    <p class="fade-in" style="margin-bottom: 2rem;white-space:pre-wrap;">{{ section['main'] }}</p>
+            </div>
+
+            {% set outer_loop = loop %}
+            {% for option in section['optroute'] %}
+
+                <button value= "{{ option }}" id="{{ outer_loop.index }}-{{ loop.index }}" class="btn btn-outline-warning btn-pill; {{ section['optroute'][option][1] }}">{{ option }}</button>
+            {% endfor %}
+
+            <div id="e{{ loop.index }}" class="text">
+                <p class= "fade-in" id="p{{ loop.index }}" style="margin-bottom: 2rem; white-space:pre-wrap;"></p>
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    <form id= "previous" action="/previous" method="post">
+            <!--<input name= "chapter_title" type= "hidden" value= "{{ title }}">-->
+            <input name= "play_id" type= "hidden" value= "{{ play_id }}">
+            <button type="submit" class="previous btn btn-outline-danger">Previous Chapter</button>
+    </form>
+
+    <form id= "forward" action="/forward" method="post">
+        {% for section in chapter %}
+            <input name= "choice{{ loop.index }}" id= "choice{{ loop.index }}" type = "hidden" value="">
+        {% endfor %}
+            <input name= "play_id" type= "hidden" value= "{{ play_id }}">
+            <input id="story" name="story" type="hidden" value="">
+            <button type="submit" class="next btn btn-outline-danger">Next Chapter</button>
+    </form>
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        // Select background class
+        let background = document.querySelector('.back');
+        var titles = {"Chapter I: Karasi": "1","Chapter II: Breakfast": "2", "Chapter III: The First Day": "3","Chapter IV: The House": "4","Chapter V: Recognition": "5","Chapter VI: Family": "6", "Chapter VII: Journey": "7", "Chapter VIII: Revelation": "8", "Chapter IX: The Cure?": "9","Chapter X: The Legend of Karasi": "10" };
+        var no_end_button = ["Chapter IV: The House", "Chapter VII: Journey", "Chapter VIII: Revelation"]
+        var current_title = {{ title|tojson }};
+
+        // Apply style to background
+        let title_number = titles[current_title];
+        let file = title_number + ".jpg"
+        let image = "/static/" + file;
+        background.setAttribute('style', 'background-image: url('+image+')' );
+
+        if (title_number === '6'){
+            section1 = document.getElementById('1');
+            for(let i=0; i < 13; i++){
+                section1.appendChild(document.createElement("br"))
+            }
+        }
+
+        //attach audio play
+        // Select audio from folder
+        let audio_file = title_number + ".mp3";
+        let audio = "/static/" + audio_file;
+
+        //Plug correct chapter audio in and play
+        var song = new Audio(audio);
+        song.volume = 0.1;
+        song.play();
+        song.autoplay = true;
+
+        // Get chapter information from server and convert to JSON format
+        var chapter = {{ chapter|tojson }};
+
+        // Initialze array to store website elements in sections
+        var mains = [];
+
+        // Store website elements in array
+        for(let i = 0; i < chapter.length; i++){
+            var mindex = i + 1;
+            eval('var main' + mindex + '= ' + 'document.getElementById(mindex);');
+            eval('mains[' + i + ']= ' + 'main' + mindex + ';');
+        }
+
+        // Set all of the sections to hidden except the first one
+        for(let i = 1; i < mains.length; i++){
+            mains[i].style.display = "none"
+        }
+
+        // Select the html form tag to go to next chapter and hide the form element
+        var form = document.querySelector("#forward");
+        form.style.display = "none"
+
+        // Initialze array to store user choices that will later be sent back to server via form
+        var choices = [];
+
+        // Store elements in array
+        for(let i = 0; i < chapter.length; i++){
+            var cindex = i + 1;
+            var choice_id = 'choice' + parseInt(cindex);
+            eval('var choice' + cindex + '= ' + 'document.getElementById(choice_id);');
+            eval('choices[' + i + ']= ' + 'choice' + cindex + ';');
+        }
+
+        // Initialze array to store all of the button elements
+        var buttons = [];
+
+        // Each array index will contain the buttons for a single section of text
+        for(let i = 0; i < chapter.length; i++){
+            for(let j = 0; j < Object.keys(chapter[i].optroute).length; j++){
+                // Dynamically generate variable names and select button elements
+                var bindex_i = i + 1;
+                var bindex_j = j + 1;
+                var button_id = parseInt(bindex_i) + '-' + parseInt(bindex_j);
+                var button_name = parseInt(bindex_i) + '_' + parseInt(bindex_j);
+                eval('var button' + button_name + '= ' + 'document.getElementById(button_id);');
+                if (j == 0){ // If there are no buttons in the sublist yet, input a sublist
+                    eval('buttons[' + i + ']= ' + '[button' + button_name + '];');
+                }
+                else{ // Add buttons to existing sublist
+                    eval('buttons[' + i + '][' + j + ']= button' + button_name + ';');
+                }
+            }
+        }
+
+        // Only show one button on chapter 10
+        if (title_number === '10'){
+            archetype = {{ archetype|tojson }}
+            for (let button_route of buttons){
+                for (let i = 0; i < button_route.length; i++){
+                    button_route[i].style.display = "none";
+                }
+            document.querySelector('.'+archetype).style.display = '';
+            }
+        }
+
+        // Counter variable
+        var c = 0;
+
+        // Iterate over the button groups in the buttons array. Each button group is in an index in buttons
+        for (let button_route of buttons){
+            // Iterate over the individual buttons in each route
+            for (let i = 0; i < button_route.length; i++){
+                button_route[i].addEventListener('click', function() {
+
+                    // Remove special case for chapter 6
+                    if (title_number === '6'){
+                        if (c === 0){
+                            section1 = document.getElementById('1');
+                            breaks = section1.querySelectorAll('br');
+                            for (let br of breaks){
+                                br.remove()
+                            }
+                        }
+                    }
+
+                    // play sfx when button clicked
+                    let audio = "/static/button.mp3";
+                    var sfx = new Audio(audio);
+                    sfx.volume = .08;
+                    sfx.play();
+
+                    if (song.currentTime == 0) {
+                        song.play();
+                    }
+
+                    // When button is clicked hide previous chapter button
+                    if (i == 0){
+                        document.getElementById('previous').style.display = "none";
+                    }
+
+                    //When button is clicked warn against leaving page
+                    let links = document.querySelectorAll(".links");
+                    for (let i = 0; i < links.length; i++) {
+                        links[i].addEventListener("mouseover", function()
+                        {
+                            let guard = document.querySelector("#click-alert");
+                            guard.hidden = false;
+                        });
+                    }
+
+                    // When button is clicked plug the response html in
+                    response = document.getElementById('p' + (c+1).toString())
+                    response.innerHTML = (chapter[c].optroute[button_route[i].value])[0];
+                    if (title_number === '10'){
+                        response.style.color = "gold";
+                    }
+                    else{
+                        response.style.color = "red";
+                    }
+
+                    // Set the user's choice as the value of form input
+                    document.getElementById('choice' + (c+1).toString()).value = button_route[i].value;
+
+                    // Hide the buttons after click
+                    for (let j = 0; j < button_route.length; j++)
+                    {
+                        button_route[j].style.display = "none";
+                    }
+
+                    // Stop the function when at the last index and display the form
+                    if (c === buttons.length - 1) // counter variable, c, used since buttons and mains will always be same length)
+                    {
+                        form.style.display = "";
+
+                        // Now that story is set, add to form
+                        let story = "";
+                        let pieces = document.querySelectorAll("p");
+                        for (let i = 0; i < pieces.length; i++) {
+                            story = story + pieces[i].innerHTML + "\n" + "\n";
+                        }
+                        document.getElementById("story").value = story;
+                        return;
+                    }
+
+                    if ((c === buttons.length - 2) && (buttons[c + 1].value == undefined) && (no_end_button.includes(current_title)))
+                    {
+                        form.style.display = "";
+                        // Hide unnecessary buttons
+                        for (let k = 0; k < buttons[c+1].length; k++){
+                            buttons[c + 1][k].style.display = 'hidden';
+                        }
+
+                        // Now that story is set, add to form
+                        let story = "";
+                        let pieces = document.querySelectorAll("p");
+                        for (let i = 0; i < pieces.length; i++){
+                            story = story + pieces[i].innerHTML + "\n" + "\n";
+                        }
+                        document.getElementById("story").value = story;
+
+                        // Display the next section of text and button
+                        final_block = mains[c + 1];
+                        final_block.style.display = '';
+                        trash_button = mains[c + 1].querySelector('button');
+                        trash_button.style.display = 'none';
+                        return;
+                    }
+                    // Display the next section of text and button
+                    mains[c + 1].style.display = "";
+                    c++;
+                });
+            }
+        }
+    });
+    </script>
+{% endblock %}

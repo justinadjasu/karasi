@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Your Page
+{% endblock %}
+
+{% block styles %}
+<style>
+.back
+{
+   background-image: url("{{ url_for('static', filename='register.jpg') }}");
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: cover;
+   height: 100%;
+}
+
+/*fixes issues with backrground image proportions*/
+main
+{
+     margin: 0%;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+<br>
+<br>
+    <h2>
+        Playthroughs
+    </h2>
+    <table border= 2 bordercolor= "#808080" class="table table-dark">
+        <tr>
+            <th scope="col">Character Name</th>
+            <th scope="col">Date Started</th>
+            <th scope="col">Archetype</th>
+            <th scope="col">View Story</th>
+            <th scope="col">View Breakdown</th>
+        </tr>
+    {% if plays %}
+    {% for play in plays %}
+    <tr>
+        <td>{{ play.name }}</td>
+        <td>{{ play.date }}</td>
+        <td class="riptape" style="font-size: 20pt">{{ play.archetype }}</td>
+        <td><button name="continue" class="btn btn-light" value="{{ play.id }}" type="submit" form="continue">View Story</button></td>
+        <td><button name="breakdown" class="btn btn-danger" value="{{ play.id }}" type="submit" form="continue">Breakdown</button></td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    </table>
+    <form action="/past" method="post" hidden id="continue">
+        <div class="form-group">
+        </div>
+    </form>
+    <script>
+        // add aduio for past playthroughs page
+        document.addEventListener("DOMContentLoaded", function () {
+            let boo = 0;
+            document.addEventListener("mouseover", function () {
+                if (boo == 0) {
+                    // Select audio from folder
+                    let audio = "/static/index.mp3"
+
+                    //Plug correct chapter audio in and play
+                    var song = new Audio(audio);
+                    song.volume = 0.1;
+                    song.play();
+                    song.autoplay = true;
+                    boo ++;
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

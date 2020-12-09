@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %} Login {% endblock %}
+
+{% block styles %}
+<style>
+.back
+{
+   background-image: url("{{ url_for('static', filename='karasi.jpg') }}");
+   background-repeat: no-repeat;
+   background-position: center;
+   background-size: cover;
+   height: 100%;
+}
+.contents
+{
+     position: relative;
+     top: 20%;
+}
+
+/*fixes issues with backrground image proportions*/
+main
+{
+     margin: 0%;
+}
+</style>
+{% endblock %}
+
+{% block main %}
+    <h2><i><b>Choose Your Fate</b></i></h2>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <button class="btn btn-danger" type="submit">Login</button>
+    </form>
+    <script>
+        // add audio for login page and play
+        document.addEventListener("DOMContentLoaded", function () {
+                let source = "/static/login.mp3"
+                var song = new Audio(source);
+                song.volume = 0.1;
+                song.play();
+                song.autoplay = true;
+        });
+    </script>
+{% endblock %}

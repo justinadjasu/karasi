@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block styles %}
+<style>
+    .back
+    {
+        background-repeat: repeat-y;
+        background-position: center;
+        top: 10%;
+        background-size: cover;
+    }
+
+    /*fixes issues with backrground image proportions*/
+    main
+    {
+         margin: 0%;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+<br>
+<br>
+    <h2>{{ title }}<hr></h2>
+        <div class="fade-in">
+            <!--Top image for chapter 1-->
+            <img style='padding:1px; border:3px solid #ffffff' src="{{url_for('static', filename='city.jpg')}}"  width="500" height="600"alt="pre IMPIR" class="image">
+        </div>
+        <div>
+            <p style="margin-bottom: 2rem;white-space:pre-wrap;" class ="fade-in">{{ loaded }}</p>
+        </div>
+    <form id= "previous" action="/previous" method="post">
+            <input name= "play_id" type= "hidden" value= "{{ play_id }}">
+            <button type="submit" class="previous btn btn-outline-danger">Previous Chapter</button>
+    </form>
+    <form id= "forward" action="/forward" method="post">
+            <input name= "play_id" type= "hidden" value= "{{ play_id }}">
+            <button type="submit" class="next btn btn-danger">Next Chapter</button>
+    </form>
+
+    <script>
+    // Array of each chapter title that corresponds to audio
+    document.addEventListener('DOMContentLoaded', function() {
+        var titles = {"Chapter I: Karasi":"1","Chapter II: Breakfast":"2", "Chapter III: The First Day":"3","Chapter IV: The House":"4","Chapter V: Recognition":"5","Chapter VI: Family":"6", "Chapter VII: Journey":"7", "Chapter VIII: Revelation":"8", "Chapter IX: The Cure?":"9","Chapter X: The Legend of Karasi":"10" };
+        let hide = "Chapter I: Karasi";
+        let current_title = {{ title|tojson }};
+        let title_number = titles[current_title];
+
+         // Select source tag for audio
+        let source = document.querySelector('#audio_source');
+
+        let boo = 0;
+        document.addEventListener("mouseover", function () {
+            if (boo == 0) {
+                // Select audio from folder
+                let audio_file = title_number + ".mp3"
+                let audio = "/static/" + audio_file;
+
+                //Plug correct chapter audio in and play
+                var song = new Audio(audio);
+                song.volume = 0.1;
+                song.play();
+                song.autoplay = true;
+                boo ++;
+            }
+            });
+
+        // Hide the previous button on Chapter 1
+        if (title_number === "1")
+        {
+            document.getElementById('previous').style.display = "none";
+        }
+        else
+        {
+            document.querySelector('.image').style.display = "none";
+        }
+        // Select background class
+        let background = document.querySelector('.back');
+
+        // Apply style to background
+        let file = title_number + ".jpg";
+        let image = "/static/" + file;
+        background.setAttribute('style', 'background-image: url('+image+')' );
+
+        // Exception for chapter 9 where page is not full
+        if (title_number === '9'){
+            text = document.querySelector('p')
+            for(let i=0; i < 7; i++){
+                text.appendChild(document.createElement("br"))
+            }
+        }
+    });
+    </script>
+{% endblock %}

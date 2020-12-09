@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang = "en">
+    <head>
+        <!--Bootstrap stylesheet-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+        <!-- http://getbootstrap.com/docs/4.5/ -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+        <!--Local stylesheet-->
+        <link href="/static/styles.css" rel="stylesheet">
+        <link href="/static/symbol.jpg" rel="icon">
+
+        <title>Legend of Karasi: {% block title %}{% endblock %}</title>
+    </head>
+        {% block styles %}{% endblock %}
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="links navbar-brand" href="/">
+                <span class="red" class = "riptape links" style = "font-family: riptape">Legend of Karasi</span>
+            </a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session.user_id %}
+                    <ul class="navbar-nav mr-auto mt-2">
+                    </ul>
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="links nav-link" style="color: red;" href="/new">Start Your Story</a></li>
+                        <li class="nav-item"><a class="links nav-link" href="/past" style="color: red;">Past Playthroughs</a></li>
+                        <li class="nav-item"><a class="links nav-link" href="/creative" style="color: red;">Creative Decisions</a></li>
+                        <li class="nav-item"><a class="links nav-link" href="/logout" style="color: red;">Log Out</a></li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" style="color:red" href="/register">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" style="color:red" href="/login">Login</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible text-center " role="alert" style="margin: 0%">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <div class="alert alert-primary alert-dismissible text-center " role="alert" hidden="true" id="click-alert" style="margin: 0%">
+            Leaving this page without clicking "next chapter" may result in <strong>lost progress</strong>.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="back">
+            <div class="contents">
+                <main class="container-fluid">
+                    {% block main %}{% endblock %}
+                </main>
+
+                <footer class="small text-center text-muted" >
+                    <a style="color:white">Produced By Artea Brahaj, Nana Anyanwu, Justin Adjasu.</a>
+                </footer>
+            </div>
+        </div>
+    </body>
+</html>

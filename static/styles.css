@@ -1,0 +1,195 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+nav .navbar-brand .red
+{
+    color: #ea433b;
+}
+
+main .form-control
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+main
+{
+    /* Scroll horizontally as needed */
+    overflow-x: auto;
+    position: relative;
+    margin: 2%;
+}
+
+main img
+{
+    /* Constrain images on small screens */
+    max-width: 100%;
+}
+
+@font-face {
+    font-family: riptape;
+    src: url(riptape/ripTAPE_fixed.ttf);
+}
+
+.riptape {
+    font-family: riptape;
+    color: red;
+}
+
+.nav-link, a {
+    font-style: italic;
+}
+
+body {
+    background-color: black;
+    color: white;
+}
+
+.navbar navbar-expand-md navbar-dark bg-dark {
+    border-bottom: none;
+}
+
+.container p-5
+{
+    margin: none;
+}
+
+h1 {
+    font-style: italic;
+    text-align: center;
+    color: white;
+}
+
+.image {
+    align-content: center;
+    display: block;
+    margin: auto;
+    width: 20%;
+    height: 15%;
+    margin-bottom: 3%;
+}
+
+#navbar {
+    text-align: center;
+}
+
+
+hr {
+    background-color: white;
+    width: 80%;
+}
+
+form {
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+i {
+    font-weight: lighter;
+}
+
+body, html {
+    height: 100%;
+}
+
+.small text-center text-muted {
+    text-align: center;
+    top: 95%;
+}
+
+p {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+hr, h2, div {
+    text-align: center;
+}
+
+.next {
+    float:right;
+}
+
+.previous {
+    float:left;
+}
+
+.fade-in {
+  animation: fadeIn ease 5s;
+  -webkit-animation: fadeIn ease 5s;
+  -moz-animation: fadeIn ease 5s;
+  -o-animation: fadeIn ease 5s;
+  -ms-animation: fadeIn ease 5s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+}
+
+#click-alert {
+  margin-bottom: 0%;
+}
+
+ripper {
+  font-family: riptape;
+  color: red;
+}
+
+.primary {
+  color: red;
+}
+
+.secondary {
+  color: gold;
+}
+
+.alert {
+  margin-bottom: 0%;
+  position: absolute;
+}

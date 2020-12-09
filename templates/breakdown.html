@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Breakdown
+{% endblock %}
+
+{% block styles %}
+<style>
+    .back
+    {
+        background-image: url("{{ url_for('static', filename='{{ primary }}.jpg') }}");
+        background-repeat: repeat-y;
+        background-position: center;
+        top: 10%;
+        background-size: cover;
+        background-image: url('/static/{{ primary }}.jpg');
+    }
+    /*fixes issues with backrground image proportions*/
+    main
+    {
+         margin: 0%;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+    <br>
+    <br>
+    <h1 style="color: gold">
+        Breakdown<hr>
+    </h1>
+
+    <h4>
+        Primary Archetype: <h2 class="riptape primary">{{ primary }}</h2>
+    </h4>
+    <p class="text" id="text0">
+        {{ text[0] }}
+    </p>
+    <h4>
+        Secondary Archetype: <h2 class="riptape secondary">{{ secondary }}</h2>
+    </h4>
+    <p class="text" id="text1">
+        {{ text[1] }}
+    </p>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+                    // Select audio from folder
+                    let audio = "/static/{{ primary }}.mp3"
+
+                    // List of archetypes
+                    let arch = {{ primary|tojson }}
+                    if (arch === "Christ"){
+                        section1 = document.getElementById('text1');
+                        for(let i=0; i < 5; i++){
+                            section1.appendChild(document.createElement("br"))
+                        }
+                    }
+                    else if (arch === "Prophet"){
+                        section1 = document.getElementById('text1');
+                        for(let i=0; i < 3; i++){
+                            section1.appendChild(document.createElement("br"))
+                        }
+                    }
+
+                    //Plug correct chapter audio in and play
+                    var song = new Audio(audio);
+                    song.volume = 0.1;
+                    song.play();
+                    song.autoplay = true;
+        });
+    </script>
+{% endblock %}

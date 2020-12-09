@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% block title %}
+    Creative Decisions
+{% endblock %}
+
+{% block styles %}
+<style>
+    .back
+    {
+        background-image: url("{{ url_for('static', filename='creative.jpg') }}");
+        background-repeat: repeat-y;
+        background-position: center;
+        background-size: cover;
+        top: 10%
+    }
+    main
+    {
+         margin: 0%;
+    }
+</style>
+{% endblock %}
+
+{% block main %}
+    <br>
+    <br>
+    <h1 style="color: gold">
+        Creative Decisions<hr>
+    </h1>
+
+    <h4 class="riptape primary">
+        Legend of Karasi
+    </h4>
+    {% for section in text %}
+    <b><h5>{{ section['title'] }}</h5></b>
+    <p>{{ section['paragraph'] }}</p>
+    <br>
+    {% endfor %}
+    <script>
+        // audio for creative page
+        document.addEventListener("DOMContentLoaded", function() {
+            // Select audio from folder
+            let audio = "/static/creative.mp3";
+
+            //Plug correct chapter audio in and play
+            var song = new Audio(audio);
+            song.volume = 0.3;
+            song.play();
+            song.autoplay = true;
+        });
+    </script>
+{% endblock %}
