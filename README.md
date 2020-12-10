@@ -1,3 +1,5 @@
+# README
+
 In the website Legend of Karasi, the user is tasked with making a series of decisions that will influence not only the progression of an apocalyptic story but also their role (Christ, Anti-Christ, Survivalist, or Prophet) within the apocalypse.
 
 Upon clicking the website link (or flask run and click website link), the user is directed to the homepage that displays the title of the website (Legend of Karasi) in red font on the left side of the gray header and a red ‘Register’ and ‘Login’ option on the right side of the gray header. Below the header, the words ‘Choose Your Own Fate’ are displayed in white font along with forms that allow the user to write in their username and password and click the red login button to login. However, a first time user will not have registered yet and thus will need to click the ‘register’ hyperlink at the top right corner. 
